@@ -6,8 +6,8 @@ import re
 import time
 
 # 🔑 API credentials
-APP_ID = "3e80aba1"
-API_KEY = "2a712dbe2c50312eb5128c3bec054dbd"
+APP_ID = "YOUR CREDENCIALS"
+API_KEY = "YOUR CREDENCIALS"
 
 BASE_URL = "https://api.adzuna.com/v1/api/jobs/nl/search/{}"
 
