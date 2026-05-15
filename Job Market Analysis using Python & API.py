@@ -6,8 +6,8 @@ import re
 import time
 
 # 🔑 API credentials
-APP_ID = "YOUR CREDENCIALS"
-API_KEY = "YOUR CREDENCIALS"
+APP_ID = "YOUR APP_ID"
+API_KEY = "YOUR API KEY"
 
 BASE_URL = "https://api.adzuna.com/v1/api/jobs/nl/search/{}"
 
@@ -105,20 +105,35 @@ def extract_skills(df):
 # -------------------------------
 # 📊 VISUALIZATION
 # -------------------------------
-def plot_skills(df):
-    skill_counts = df[SKILLS].sum().sort_values(ascending=False)
 
-    print("\nSkill demand:\n", skill_counts)
+def plot_company_openings(df):
 
-    skill_counts.plot(kind="bar")
-    plt.title("Most In-Demand Skills for Data Analysts")
-    plt.xlabel("Skill")
-    plt.ylabel("Number of Job Listings")
+    # Count job postings per company
+    company_counts = (
+        df.groupby("company")
+        .size()
+        .sort_values(ascending=False)
+        .head(20)
+    )
+
+    print("\nOpen Data Analyst Positions by Company:\n")
+    print(company_counts)
+
+    # Plot
+    plt.figure(figsize=(12, 6))
+
+    company_counts.plot(kind="bar")
+
+    plt.title("Companies Hiring Data Analysts")
+    plt.xlabel("Company")
+    plt.ylabel("Number of Open Positions")
+
+    plt.xticks(rotation=45, ha="right")
+
     plt.tight_layout()
     plt.show()
 
-
-# -------------------------------
+    # -------------------------------
 # 🚀 MAIN PIPELINE
 # -------------------------------
 def main():
@@ -127,15 +142,20 @@ def main():
     print("Total jobs collected:", len(jobs))
 
     df = clean_data(jobs)
+
+    # Extract skills
     df = extract_skills(df)
 
-    plot_skills(df)
-
+    # Save CSV
     df.to_csv("jobs.csv", index=False)
 
     print("\nSample data:")
     print(df.head())
+
     print("\nDataset shape:", df.shape)
+
+    # Plot company openings
+    plot_company_openings(df)
 
 
 if __name__ == "__main__":
